@@ -48,7 +48,7 @@ vim:
 
 emacs:
 	curl -fSL $(emacs_url) -o $(emacs_obj)
-	if [ ! -d $(emacs_src) ]; them mkdir $(emacs_src); fi
+	if [ ! -d $(emacs_src) ]; then mkdir $(emacs_src); fi
 	tar -xzC $(emacs_src) --strip-components=1 -f $(emacs_obj)
 	cd $(emacs_src); ./configure; make; make install
 
