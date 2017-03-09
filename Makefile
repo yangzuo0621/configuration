@@ -9,15 +9,21 @@ emacs_src = /usr/local/src/emacs
 emacs_obj = /usr/local/src/emacs.tar.gz
 perl_src = /usr/local/src/perl
 perl_obj = /usr/local/src/perl.tar.gz
+libevent_src = /usr/local/src/libevent
+libevent_obj = /usr/local/src/libevent.tar.gz
+tmux_src = /usr/local/src/tmux
 
 git_url = https://github.com/git/git/archive/v2.12.0.tar.gz
 python_url = https://www.python.org/ftp/python/2.7.13/Python-2.7.13.tgz
 emacs_url = http://ftp.gnu.org/gnu/emacs/emacs-25.1.tar.gz
 perl_url = http://www.cpan.org/src/5.0/perl-5.24.1.tar.gz
+libevent_url = https://github.com/libevent/libevent/releases/download/release-2.1.8-stable/libevent-2.1.8-stable.tar.gz
 
-all_obj = $(git_src) $(git_obj) $(python_src) $(python_obj) $(vim_src) $(emacs_src) $(emacs_obj) $(perl_src) $(perl_obj)
+all_obj = $(git_src) $(git_obj) $(python_src) $(python_obj) $(vim_src) \
+          $(emacs_src) $(emacs_obj) $(perl_src) $(perl_obj) $(libevent_src) $(libevent_obj) \
+          $(tmux_src)
 
-all: init perl git python vim emacs docker
+all: init perl git python vim emacs docker tmux
 
 init:
 	yum install -y gcc gcc-c++ autoconf automake zlib-devel curl-devel ncurses-devel perl-ExtUtils-MakeMaker
@@ -59,6 +65,17 @@ docker:
 	yum makecache fast
 	version=`yum list docker-ce.x86_64 --showduplicates | grep docker | sort -r | awk '{print $$2}' | sed -n '1p'`; yum install -y docker-ce-$$version
 	systemctl start docker
+
+tmux: libevent
+	if [ -d $(tmux_src) ]; then rm -rf $(tmux_src); fi
+	cd $(local_src); git clone https://github.com/tmux/tmux.git
+	cd $(tmux_src); sh autogen.sh; ./configure; make; make install
+
+libevent:
+	curl -fSL $(libevent_url) -o $(libevent_obj)
+	if [ ! -d $(libevent_src) ]; then mkdir $(libevent_src); fi
+	tar -xzC $(libevent_src) --strip-components=1 -f $(libevent_obj)
+	cd $(libevent_src); ./configure --prefix=/usr; make; make install
 
 clean:
 	rm -rf $(all_obj)
