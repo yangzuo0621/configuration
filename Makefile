@@ -17,7 +17,7 @@ perl_url = http://www.cpan.org/src/5.0/perl-5.24.1.tar.gz
 
 all_obj = $(git_src) $(git_obj) $(python_src) $(python_obj) $(vim_src) $(emacs_src) $(emacs_obj) $(perl_src) $(perl_obj)
 
-all: init git python vim emacs
+all: init perl git python vim emacs docker
 
 init:
 	yum install -y gcc gcc-c++ autoconf automake zlib-devel curl-devel ncurses-devel perl-ExtUtils-MakeMaker
