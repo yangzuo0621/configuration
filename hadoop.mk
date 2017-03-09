@@ -2,6 +2,9 @@ hadoop-url = http://mirrors.tuna.tsinghua.edu.cn/apache/hadoop/common/hadoop-2.7
 hadoop-src = ~/hadoop-2.7.3-src
 hadoop-obj = ~/hadoop.tar.gz
 
+dependency:
+	yum install -y cmake openssl-devel zlib-devel
+
 hadoop:
 	if [ -d $(hadoop-src) ]; then rm -rf $(hadoop-src); fi; mkdir $(hadoop-src)
 	curl -fSL $(hadoop-url) -o $(hadoop-obj)
